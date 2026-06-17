@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İyi ki Doğdun Aşkım ✨</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --deep: #03010a;
+    --nebula1: #1a0533;
+    --nebula2: #0d1b4b;
+    --rose: #e8356d;
+    --rose-glow: #ff6fa8;
+    --gold: #f5c842;
+    --lilac: #c084fc;
+    --ice: #a5f3fc;
+    --white: #fff8ff;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--deep);
+    overflow-x: hidden;
+    font-family: 'Quicksand', sans-serif;
+    color: var(--white);
+  }
+
+  /* ── CANVAS ── */
+  #canvas {
+    position: fixed; inset: 0;
+    z-index: 0;
+  }
+
+  /* ── NEBULA BLOBS ── */
+  .nebula {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .35;
+    pointer-events: none;
+    z-index: 1;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .n1 { width: 600px; height: 600px; background: var(--nebula1); top: -10%; left: -10%; animation-delay: 0s; }
+  .n2 { width: 500px; height: 500px; background: var(--nebula2); bottom: -10%; right: -10%; animation-delay: -6s; }
+  .n3 { width: 400px; height: 400px; background: #1e0040; top: 40%; left: 30%; animation-delay: -12s; }
+
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(40px, 30px) scale(1.08); }
+  }
+
+  /* ── SHOOTING STARS ── */
+  .shoot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .star-shoot {
+    position: absolute;
+    width: 3px; height: 80px;
+    background: linear-gradient(to bottom, #fff, transparent);
+    border-radius: 2px;
+    opacity: 0;
+    animation: shoot linear infinite;
+  }
+  @keyframes shoot {
+    0%   { opacity: 0; transform: translateY(-100px) rotate(135deg); }
+    10%  { opacity: 1; }
+    80%  { opacity: .5; }
+    100% { opacity: 0; transform: translateY(110vh) rotate(135deg); }
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .scene {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px 60px;
+    text-align: center;
+  }
+
+  /* ── PLANET ── */
+  .planet-wrap {
+    position: relative;
+    width: 200px; height: 200px;
+    margin-bottom: 40px;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-18px); }
+  }
+
+  /* Halka ARKASI — sabit, gezegenin gerisinde */
+  .ring-back {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 320px; height: 80px;
+    margin-left: -160px;
+    margin-top: -40px;
+    border-radius: 50%;
+    border: 15px solid transparent;
+    border-bottom: 15px solid rgba(245,200,66,.8);
+    box-shadow: 0 10px 24px rgba(245,200,66,.2);
+    z-index: 0;
+  }
+
+  .planet {
+    position: relative;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%,
+      #f5c842 0%, #e8356d 40%, #7c1fa8 75%, #0d1b4b 100%);
+    box-shadow:
+      0 0 40px 10px rgba(232, 53, 109, .5),
+      0 0 100px 20px rgba(192, 132, 252, .3),
+      inset -30px -20px 60px rgba(0,0,0,.5);
+    z-index: 1;
+  }
+
+  /* Halka ÖNÜ — sabit, gezegenin önünde */
+  .ring-front {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 320px; height: 80px;
+    margin-left: -160px;
+    margin-top: -40px;
+    border-radius: 50%;
+    border: 15px solid transparent;
+    border-top: 15px solid rgba(245,200,66,.95);
+    box-shadow: 0 -8px 20px rgba(245,200,66,.3);
+    z-index: 2;
+  }
+
+  /* Aylar elips yörüngede döner */
+  .moon-orbit {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 320px; height: 80px;
+    margin-left: -160px;
+    margin-top: -40px;
+    border-radius: 50%;
+    animation: orbitSpin linear infinite;
+    z-index: 3;
+  }
+  .m1-orbit { animation-duration: 4s; }
+  .m2-orbit { animation-duration: 7s; animation-delay: -3s; }
+
+  .moon {
+    position: absolute;
+    border-radius: 50%;
+  }
+  /* ay elipsin sağ ucunda başlar */
+  .m1 { width:16px; height:16px; background:#f5c842; top:-8px; right:-8px; box-shadow:0 0 10px #f5c842; }
+  .m2 { width:10px; height:10px; background:#c084fc; top:-5px; right:-5px; box-shadow:0 0 8px #c084fc; }
+
+  @keyframes orbitSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* little moons */
+  .moon {
+    position: absolute;
+    border-radius: 50%;
+    animation: orbit linear infinite;
+    transform-origin: 110px 0;
+  }
+  .m1 { width:16px; height:16px; background:#f5c842; top:calc(50% - 8px); left:calc(50% - 8px); animation-duration:4s; box-shadow:0 0 10px #f5c842; }
+  .m2 { width:10px; height:10px; background:#c084fc; top:calc(50% - 5px); left:calc(50% - 5px); animation-duration:7s; animation-delay:-2s; transform-origin:130px 0; box-shadow:0 0 8px #c084fc; }
+  @keyframes orbit { to { transform: rotate(360deg) translateX(110px); } }
+
+  /* ── HEADLINE ── */
+  .eyebrow {
+    font-family: 'Quicksand', sans-serif;
+    font-size: .85rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--lilac);
+    opacity: .8;
+    margin-bottom: 12px;
+    animation: fadeUp 1s ease both;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 8vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -.01em;
+    color: var(--white);
+    text-shadow: 0 0 30px rgba(232,53,109,.6), 0 0 80px rgba(192,132,252,.3);
+    animation: fadeUp 1s .2s ease both;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--rose-glow);
+  }
+  .name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 9vw, 6rem);
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--gold), var(--rose-glow), var(--lilac), var(--ice));
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 1s .4s ease both, shimmer 4s linear infinite;
+  }
+  @keyframes shimmer { to { background-position: 300% center; } }
+
+  /* ── MESSAGE ── */
+  .msg {
+    max-width: 540px;
+    margin: 32px auto 0;
+    font-size: clamp(.95rem, 2.5vw, 1.1rem);
+    line-height: 1.85;
+    color: rgba(255,248,255,.75);
+    animation: fadeUp 1s .7s ease both;
+  }
+  .msg span { color: var(--rose-glow); font-weight: 600; }
+
+  /* ── HEARTS ROW ── */
+  .hearts {
+    display: flex; gap: 14px;
+    margin-top: 36px;
+    animation: fadeUp 1s 1s ease both;
+  }
+  .heart {
+    font-size: 1.8rem;
+    animation: heartbeat 1.4s ease-in-out infinite;
+  }
+  .heart:nth-child(2) { animation-delay: .2s; }
+  .heart:nth-child(3) { animation-delay: .4s; font-size: 2.4rem; }
+  .heart:nth-child(4) { animation-delay: .2s; }
+  .heart:nth-child(5) { animation-delay: 0s; }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.25); }
+  }
+
+  /* ── WISH BUTTON ── */
+  .btn {
+    margin-top: 44px;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--rose), var(--lilac));
+    color: #fff;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(232,53,109,.45);
+    transition: transform .2s, box-shadow .2s;
+    animation: fadeUp 1s 1.2s ease both;
+  }
+  .btn:hover { transform: scale(1.06); box-shadow: 0 0 50px rgba(232,53,109,.7); }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    top: -20px;
+    border-radius: 2px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(105vh) rotate(720deg); }
+  }
+
+  /* ── WISH POPUP ── */
+  .popup {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 500;
+    background: rgba(3,1,10,.75);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .4s ease;
+  }
+  .popup.show { display: flex; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  .popup-box {
+    background: linear-gradient(135deg, #1a0533, #0d1b4b);
+    border: 1px solid rgba(192,132,252,.3);
+    border-radius: 24px;
+    padding: 50px 44px;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 80px rgba(232,53,109,.3);
+    animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes popIn { from { transform: scale(.7); opacity:0; } to { transform: scale(1); opacity:1; } }
+  .popup-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+  .popup-box p {
+    color: rgba(255,248,255,.8);
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+  .close-btn {
+    margin-top: 28px;
+    padding: 10px 32px;
+    border: 1px solid var(--lilac);
+    border-radius: 50px;
+    background: transparent;
+    color: var(--lilac);
+    font-family: 'Quicksand', sans-serif;
+    font-size: .95rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .close-btn:hover { background: var(--lilac); color: var(--deep); }
+
+  /* ── FADE UP ── */
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(24px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 10;
+    padding: 20px;
+    font-size: .75rem;
+    color: rgba(255,248,255,.25);
+    letter-spacing: .1em;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- NEBULA BLOBS -->
+<div class="nebula n1"></div>
+<div class="nebula n2"></div>
+<div class="nebula n3"></div>
+
+<!-- STAR CANVAS -->
+<canvas id="canvas"></canvas>
+
+<!-- SHOOTING STARS -->
+<div class="shoot" id="shoots"></div>
+
+<!-- MAIN -->
+<div class="scene">
+  <div class="planet-wrap">
+    <div class="ring-back"></div>
+    <div class="planet"></div>
+    <div class="ring-front"></div>
+    <div class="moon-orbit m1-orbit"><div class="moon m1"></div></div>
+    <div class="moon-orbit m2-orbit"><div class="moon m2"></div></div>
+  </div>
+
+  <p class="eyebrow">✦ evrenden, sevgiyle ✦</p>
+  <h1><em>İyi ki Doğdun</em></h1>
+  <div class="name">Aşkım 🌙</div>
+
+  <p class="msg">
+    Bu galaksideki her yıldızda sana bir dilek saklı.<br>
+    Bu gün, senin <span>tüm dünyamı</span> aydınlattığın kadar parlasın.<br>
+    Sen gözlerimin bulduğu en güzel takımyıldızsın. 💫
+  </p>
+
+  <div class="hearts">
+    <span class="heart">🤍</span>
+    <span class="heart">💖</span>
+    <span class="heart">💗</span>
+    <span class="heart">💖</span>
+    <span class="heart">🤍</span>
+  </div>
+
+  <button class="btn" onclick="openWish()">✨ Özel dileğini aç ✨</button>
+</div>
+
+<footer>sonsuz sevgiyle yapıldı · iyi ki doğdun</footer>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popup-box">
+    <h2>🌠 Evrenin sana dilek</h2>
+    <p>
+      Geçen her yıl seni daha mutlu, daha özgür ve daha çok sevilen bulsun.<br><br>
+      Hayallerin bu galaksi gibi genişlesin — sınır tanımadan, engel bilmeden.<br><br>
+      Ve her zaman, <strong>her zaman</strong>, yıldızların parlamaya karar vermesinin sebebinin sen olduğunu bil. 🌸
+    </p>
+    <button class="close-btn" onclick="closeWish()">Sevgiyle kapat 💜</button>
+  </div>
+</div>
+
+<script>
+// ── STAR FIELD ──
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  stars = [];
+  for (let i = 0; i < 280; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.8 + .2,
+      a: Math.random(),
+      da: (Math.random() - .5) * .008,
+      color: ['#ffffff','#f5c842','#c084fc','#a5f3fc','#ff6fa8'][Math.floor(Math.random()*5)]
+    });
+  }
+}
+resize();
+window.addEventListener('resize', resize);
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.a += s.da;
+    if (s.a > 1 || s.a < 0) s.da *= -1;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = s.color;
+    ctx.globalAlpha = s.a;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// ── SHOOTING STARS ──
+const shootWrap = document.getElementById('shoots');
+function addShoot() {
+  const el = document.createElement('div');
+  el.className = 'star-shoot';
+  el.style.left = Math.random() * 90 + '%';
+  el.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+  el.style.animationDelay = (Math.random() * 6) + 's';
+  el.style.opacity = 0;
+  shootWrap.appendChild(el);
+  setTimeout(() => el.remove(), 9000);
+}
+for (let i = 0; i < 8; i++) addShoot();
+setInterval(addShoot, 2500);
+
+// ── CONFETTI ──
+const colors = ['#f5c842','#e8356d','#c084fc','#a5f3fc','#ff6fa8','#fff'];
+function burst() {
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.width = (Math.random() * 10 + 5) + 'px';
+    c.style.height = (Math.random() * 10 + 5) + 'px';
+    c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    c.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    c.style.animationDelay = (Math.random() * 1.5) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 6000);
+  }
+}
+
+// ── POPUP ──
+function openWish() {
+  burst();
+  document.getElementById('popup').classList.add('show');
+}
+function closeWish() {
+  document.getElementById('popup').classList.remove('show');
+}
+document.getElementById('popup').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeWish();
+});
+
+// Auto-burst on load
+setTimeout(burst, 1200);
+</script>
+</body>
+</html>
